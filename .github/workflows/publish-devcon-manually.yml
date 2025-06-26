@@ -1,0 +1,87 @@
+name: Manually Publish Devcon Image
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Build target'
+        required: true
+        default: 'devcon'
+        type: choice
+        options:
+          - devcon
+          - all
+      registry:
+        description: 'Container registry to push to'
+        required: true
+        default: 'github'
+        type: choice
+        options:
+          - github
+          - aws
+          - docker.io
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest-4xlarge
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+        with:
+          fetch-depth: 1  # Speeds up checkout
+
+      - name: Set up QEMU (for multi-arch builds)
+        uses: docker/setup-qemu-action@29109295f81e9208d7d86ff1c6c12d2833863392 # v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@b5ca514318bd6ebac0fb2aedd5d36ec1b5c232a2 # v3
+        with:
+          driver: docker-container
+
+      - name: Create local builder
+        run: |
+          docker buildx create --name local-builder --platform linux/amd64,linux/arm64 --use || echo "Builder already exists"
+
+      - name: Configure AWS credentials (Only for AWS registry)
+        if: inputs.registry == 'aws'
+        uses: aws-actions/configure-aws-credentials@e3dd6a429d7300a6a4c196c26e071d42e0343502 # v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: us-west-2
+
+      - name: Login to GitHub Container Registry
+        if: inputs.registry == 'github'
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Login to Docker Hub
+        if: inputs.registry == 'docker.io'
+        uses: docker/login-action@9780b0c442fbb1117ed29e0efdff1e18412f7567 # v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Login to Amazon ECR (AWS Registry)
+        if: inputs.registry == 'aws'
+        uses: aws-actions/amazon-ecr-login@062b18b96a7aff071d4dc91bc00c4c1a7945b076 # v2
+
+      - name: Set registry environment variable
+        run: |
+          case "${{ inputs.registry }}" in
+            github) echo "REGISTRY=ghcr.io" >> $GITHUB_ENV ;;
+            aws) echo "REGISTRY=${{ secrets.AWS_ACCOUNT_ID }}.dkr.ecr.us-west-2.amazonaws.com" >> $GITHUB_ENV ;;
+            docker.io) echo "REGISTRY=docker.io" >> $GITHUB_ENV ;;
+          esac
+
+      - name: Build and push image
+        working-directory: docker/devcon
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BUILDER: local-builder
+        run: |
+          set -x  # Enable debugging
+          ./build.sh ${{ inputs.target }}

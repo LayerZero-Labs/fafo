@@ -1,0 +1,44 @@
+[licenses]
+allow = [
+    "MIT",
+    "Apache-2.0",
+    "BSL-1.0",
+    "Unicode-3.0",
+    "CC0-1.0",
+    "BSD-3-Clause",
+    "ISC",
+    "Zlib",
+    "GPL-3.0",
+    "MPL-2.0",
+    "LGPL-3.0",
+    "BSD-2-Clause",
+]
+private = { ignore = true }
+clarify = [
+    { name = "halo2", version = "0.1.0-beta.2", expression = "MIT", license-files = [
+        { path = "COPYING", hash = 0x106164e0 },
+    ] },
+]
+
+[advisories]
+db-urls = ["https://github.com/rustsec/advisory-db"]
+ignore = [
+    "RUSTSEC-2021-0145",
+    "RUSTSEC-2024-0375", # atty is unmaintained but still widely used
+    "RUSTSEC-2024-0370", # used by fibonacci example
+    "RUSTSEC-2024-0384", # used by fibonacci example
+    "RUSTSEC-2021-0141", # used by fibonacci example
+    "RUSTSEC-2024-0388", # used by fibonacci example
+    "RUSTSEC-2021-0139", # used by fibonacci example
+    "RUSTSEC-2024-0436", # paste is unmaintained since May 2024. used by alloy-primitives
+]
+
+[bans]
+multiple-versions = "warn"
+wildcards = "warn"
+highlight = "all"
+
+[sources]
+unknown-registry = "warn"
+unknown-git = "warn"
+required-git-spec = "any"

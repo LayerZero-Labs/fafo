@@ -1,0 +1,20 @@
+#!/usr/bin/env sh
+set -e
+
+# Function to patch the code script
+patch_code() {
+    # Check if the code binary path doesn't exist or if cursor handling logic is already present
+    local bin_path="$1"
+    [ ! -f "$bin_path" ] || grep -q 'cursor' "$bin_path" && return
+
+    # Insert the cursor handling logic before the specified line
+    sed -i '/exec code-insiders/a \
+elif [ "$(command -v cursor)" ]; then \
+    exec cursor "$@"' "$bin_path"
+
+    if [ $? -ne 0 ]; then
+        echo "Error: Failed to insert cursor handling logic into $bin_path."
+    fi
+}
+
+patch_code /usr/local/bin/code

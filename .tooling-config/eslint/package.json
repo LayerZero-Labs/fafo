@@ -1,0 +1,60 @@
+{
+  "name": "@tooling/eslint-config",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./recommended": {
+      "types": "./dist/recommended.d.ts",
+      "import": "./dist/recommended.mjs",
+      "require": "./dist/recommended.cjs"
+    },
+    "./strict": {
+      "types": "./dist/strict.d.ts",
+      "import": "./dist/strict.mjs",
+      "require": "./dist/strict.cjs"
+    }
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "$npm_execpath clean-prebuild && tsup",
+    "clean": "$npm_execpath clean-prebuild",
+    "clean-prebuild": "rimraf dist"
+  },
+  "dependencies": {
+    "@eslint/js": "^9.20.0",
+    "@eslint/json": "^0.10.0",
+    "@eslint/markdown": "^6.2.2",
+    "@typescript-eslint/parser": "^8.24.1",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-import-resolver-typescript": "^3.8.2",
+    "eslint-plugin-compat": "^6.0.2",
+    "eslint-plugin-import-x": "^4.6.1",
+    "eslint-plugin-jest": "^28.11.0",
+    "eslint-plugin-prettier": "^5.2.3",
+    "globals": "^15.15.0",
+    "typescript-eslint": "^8.24.1"
+  },
+  "devDependencies": {
+    "@tooling/tsup-config": "workspace:^",
+    "@tooling/typescript-config": "workspace:^",
+    "@types/eslint": "^9.6.1",
+    "eslint": "^9.20.1",
+    "rimraf": "^6.0.1",
+    "tsup": "^8.3.6",
+    "typescript": "^5.7.3"
+  },
+  "peerDependencies": {
+    "eslint": "^9.20.1",
+    "prettier": "^3.5.1"
+  }
+}

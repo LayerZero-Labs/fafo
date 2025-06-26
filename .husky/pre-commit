@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+. "$(dirname "$0")/detect-js-pm"
+
+# Detect which package manager (npm, yarn, pnpm, or bun) is being used in the project
+pm_name=$(detect_package_manager)
+
+[ -z "$pm_name" ] && exit 0  # Skip if no package manager detected
+
+command -v "$pm_name" >/dev/null 2>&1 || exit 0  # Skip if package manager command not available
+
+# Get the appropriate run command for the package manager
+pm_run_cmd=$(get_pm_run_cmd "$pm_name")
+
+actions() { 
+    $pm_run_cmd lint-staged; 
+}
+
+actions || ($pm_name install && actions)

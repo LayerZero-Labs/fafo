@@ -1,0 +1,8 @@
+{
+    "extends": "@tooling/typescript-config/base.json",
+    "compilerOptions": {
+        "allowJs": true,
+        "checkJs": true
+    },
+    "include": ["src/**/*.js", "src/**/*.mjs", "src/**/*.cjs", "src/strict.ts", "src/recommended.ts", "src/index.ts"]
+}

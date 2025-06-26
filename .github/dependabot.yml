@@ -1,0 +1,39 @@
+# yaml-language-server: $schema=https://json.schemastore.org/dependabot-2.0.json
+
+# To get started with Dependabot version updates, you'll need to specify which
+# package ecosystems to update and where the package manifests are located.
+# Please see the documentation for more information:
+# https://docs.github.com/github/administering-a-repository/configuration-options-for-dependency-updates
+# https://containers.dev/guide/dependabot
+
+# open-pull-requests-limit
+# This is the limit on the maximum number of pull requests for version updates that can be open at any time.
+# Security updates have a separate, internal limit of ten open pull requests that cannot be changed.
+
+version: 2
+updates:
+  - package-ecosystem: 'devcontainers'
+    directory: '/'
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+
+  - package-ecosystem: 'cargo'
+    directories:
+      - /
+      - /bench
+      - /codedb
+      - /exepipe
+      - /exepipe-common
+      - /hpfile
+      - /qmdb
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0
+
+  - package-ecosystem: 'npm'
+    directories:
+      - /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 0

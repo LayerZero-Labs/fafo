@@ -1,0 +1,31 @@
+{
+  "name": "@tooling/tsup-config",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "types": "./dist/index.d.ts",
+    "import": "./dist/index.mjs",
+    "require": "./dist/index.cjs"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "$npm_execpath clean-prebuild && tsup",
+    "clean": "$npm_execpath clean-prebuild",
+    "clean-prebuild": "rimraf dist"
+  },
+  "dependencies": {
+    "esbuild-node-externals": "^1.18.0",
+    "tsup": "^8.3.6"
+  },
+  "devDependencies": {
+    "@tooling/typescript-config": "workspace:^",
+    "@types/node": "^22.13.4",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.7.3"
+  }
+}

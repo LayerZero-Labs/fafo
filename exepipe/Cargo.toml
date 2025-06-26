@@ -1,0 +1,38 @@
+[package]
+name = "exepipe"
+version = "0.1.0"
+edition = "2021"
+publish = false
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+threadpool = { workspace = true }
+qmdb = { workspace = true, default-features = true }
+codedb = { workspace = true }
+exepipe-common = { workspace = true, default-features = true }
+revm.workspace = true
+byteorder = { workspace = true }
+bincode = { workspace = true }
+dashmap = { workspace = true }
+anyhow = { workspace = true }
+num-traits = { workspace = true }
+parking_lot = { workspace = true, features = ["arc_lock"] }
+serde = { workspace = true }
+bytes = { workspace = true }
+rs_merkle = { workspace = true }
+crossbeam = { workspace = true }
+lazy_static.workspace = true
+thiserror.workspace = true
+rayon.workspace = true
+smallvec = { workspace = true }
+log = { workspace = true }
+metrics = { workspace = true }
+
+[target.'cfg(not(target_os = "zkvm"))'.dependencies]
+tick_counter = { workspace = true }
+
+[dev-dependencies]
+hex = { workspace = true }
+serial_test = { workspace = true }
+tempfile = { workspace = true }
+alloy-sol-types = { workspace = true, features = ["std"] }

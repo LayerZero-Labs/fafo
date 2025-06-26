@@ -1,0 +1,38 @@
+[package]
+name = "bench-sendeth"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+exepipe = { path = "../exepipe" }
+exepipe-common = { workspace = true, default-features = true }
+qmdb = { workspace = true, default-features = true }
+revm.workspace = true
+parking_lot = { workspace = true, features = ["arc_lock"] }
+dashmap = { workspace = true }
+tempfile = { workspace = true }
+hpfile = { workspace = true }
+alloy-sol-types = { workspace = true, features = ["std"] }
+codedb = { workspace = true }
+bincode = { workspace = true }
+clap = { workspace = true, features = ["derive"] }
+log = { workspace = true }
+env_logger = { workspace = true }
+indicatif = { workspace = true }
+metrics = { workspace = true }
+metrics-util = { workspace = true }
+serde_json = { workspace = true }
+serde = { workspace = true, features = ["derive"] }
+ordered-float = { workspace = true }                           # Needed for metrics-util
+chrono = { workspace = true }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+tikv-jemallocator = { workspace = true }
+
+[target.'cfg(not(target_os = "zkvm"))'.dependencies]
+tick_counter = { workspace = true }
+
+[features]
+send_eth = []

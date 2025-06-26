@@ -1,0 +1,9 @@
+name: 'Install Dependencies'
+description: 'An action to install project dependencies'
+runs:
+  using: 'composite'
+  steps:
+    - name: Install dependencies
+      run: |
+        ./install-dependencies
+      shell: bash

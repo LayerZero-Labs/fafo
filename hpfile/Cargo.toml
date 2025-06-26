@@ -1,0 +1,23 @@
+[package]
+name = "hpfile"
+edition = "2021"
+publish = true
+version = "0.3.0"
+license = "MIT OR Apache-2.0"
+description = "Head-prunable file."
+readme = "README.md"
+homepage = "https://github.com/qmdb/qmdb/tree/main/hpfile"
+repository = "https://github.com/qmdb/qmdb/tree/main/hpfile"
+documentation = "https://docs.rs/hpfile"
+
+[dependencies]
+anyhow = { workspace = true }
+dashmap = { workspace = true }
+libc = { workspace = true }
+parking_lot = { workspace = true, features = ["arc_lock"] }
+
+[dev-dependencies]
+tempfile = { workspace = true }
+
+[features]
+default = []

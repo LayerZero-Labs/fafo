@@ -1,0 +1,78 @@
+{
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "display": "Default",
+    "compilerOptions": {
+        // Module and Resolution Options
+        "module": "ESNext",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "allowJs": true,
+        "checkJs": true,
+        "isolatedModules": true,
+        "moduleDetection": "force",
+        "baseUrl": "./src",
+        "paths": {
+            "@/*": ["./*"]
+        },
+
+        // Emit Options
+        "declaration": true,
+        "declarationMap": true,
+        "sourceMap": true,
+        "outDir": "dist",
+        "removeComments": false,
+        "preserveConstEnums": true,
+        "importHelpers": true,
+        "noEmitOnError": false,
+
+        // Type Checking
+        "strict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictBindCallApply": true,
+        "strictPropertyInitialization": true,
+        "noImplicitThis": true,
+        "alwaysStrict": true,
+        "noUnusedLocals": false,
+        "noUnusedParameters": false,
+        "exactOptionalPropertyTypes": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        "noUncheckedIndexedAccess": false,
+        "noImplicitOverride": true,
+        "allowUnusedLabels": false,
+        "allowUnreachableCode": false,
+        "noPropertyAccessFromIndexSignature": false,
+
+        // Interop Constraints
+        "esModuleInterop": true,
+        "forceConsistentCasingInFileNames": true,
+        "verbatimModuleSyntax": false,
+        "skipLibCheck": true,
+
+        // Language and Environment
+        "target": "ES2022",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+        "useDefineForClassFields": true,
+
+        // Projects
+        "composite": false,
+        "incremental": false,
+        // The .cache directory in node_modules is a standard location for build caches (used by many tools like Babel, Jest, etc.), making it a logical place for the TypeScript build cache as well.
+        "tsBuildInfoFile": "./node_modules/.cache/.tsbuildinfo"
+    },
+    "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.mts", "src/**/*.cts", "src/**/*.json"],
+    "exclude": [
+        "node_modules",
+        "dist",
+        "coverage",
+        ".turbo",
+        ".next",
+        "**/*.spec.ts",
+        "**/*.test.ts",
+        "**/*.stories.ts",
+        "**/*.story.ts"
+    ]
+}

@@ -1,0 +1,48 @@
+name: Coverage
+
+on:
+  push:
+    branches:
+      - master
+      - main
+      - dev
+  pull_request:
+    branches:
+      - master
+      - main
+      - dev
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' && github.ref != 'refs/heads/main' }}
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  coverage:
+    name: Generate coverage
+    runs-on: ubuntu-latest-4xlarge
+    permissions:
+      contents: read
+      packages: read
+    container:
+      image: ghcr.io/layerresearch/devcon:1.0.0-bookworm
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      options: --privileged
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Generate coverage report
+        run: |
+          RUST_BACKTRACE=1 RUSTFLAGS="-Awarnings" cargo llvm-cov nextest --workspace --lcov --output-path lcov.info
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@13ce06bfc6bbe3ecf90edbbf1bc32fe5978ca1d3 # v5.3.1
+        with:
+          files: lcov.info
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+        continue-on-error: true # This is a workaround for the fact that the CODECOV_TOKEN is not ready.

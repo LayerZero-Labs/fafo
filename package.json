@@ -1,0 +1,28 @@
+{
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    ".tooling-config/*"
+  ],
+  "scripts": {
+    "build": "yarn workspaces foreach  --all --topological --topological-dev run build",
+    "clean": "yarn workspaces foreach  --all --topological --topological-dev run clean",
+    "postinstall": "git config core.hooksPath .husky/_"
+  },
+  "resolutions": {
+    "esbuild": "0.25.0"
+  },
+  "devDependencies": {
+    "@tooling/eslint-config": "workspace:^",
+    "@tooling/prettier-config": "workspace:^",
+    "@tooling/typescript-config": "workspace:^",
+    "@types/node": "^22.13.4",
+    "eslint": "^9.20.1",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.4.3",
+    "prettier": "^3.5.1",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.7.3"
+  },
+  "packageManager": "yarn@4.6.0"
+}

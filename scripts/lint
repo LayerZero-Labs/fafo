@@ -1,0 +1,9 @@
+#!/bin/env bash
+
+. "$(dirname "$0")/detect-js-pm"
+
+PM_RUN=$(get_pm_run_cmd)
+
+$PM_RUN eslint --fix .
+
+cargo clippy --all --fix --allow-dirty --allow-staged -- -D warnings

@@ -1,0 +1,28 @@
+[package]
+name = "codedb"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+xxhash-rust = { workspace = true, features = ["xxh32", "xxh3"] }
+qmdb = { workspace = true, default-features = true}
+byteorder = { workspace = true }
+rand_core = { workspace = true }
+revm.workspace = true
+dashmap.workspace = true
+crossbeam.workspace = true
+hpfile = { workspace = true }
+exepipe-common = { workspace = true, default-features = true }
+parking_lot = { workspace = true}
+smallvec = { workspace = true }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+io-uring = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }
+serial_test = { workspace = true }
+

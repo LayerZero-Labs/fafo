@@ -1,0 +1,32 @@
+#!/usr/bin/env sh
+
+# Detect which package manager is being used
+detect_package_manager() {
+    if [ -f "yarn.lock" ]; then
+        echo "yarn"
+    elif [ -f "pnpm-lock.yaml" ]; then
+        echo "pnpm"
+    elif [ -f "package-lock.json" ]; then
+        echo "npm"
+    elif [ -f "bun.lockb" ]; then
+        echo "bun"
+    else
+        echo ""
+    fi
+}
+
+# Get the appropriate run command for the package manager
+get_pm_run_cmd() {
+    local pm=$1
+    if [ -z "$pm" ]; then
+        pm=$(detect_package_manager)
+    fi
+
+    case $pm in
+        "yarn") echo "yarn" ;;
+        "pnpm") echo "pnpm" ;;
+        "npm") echo "npm run" ;;
+        "bun") echo "bun run" ;;
+        *) echo "" ;;
+    esac
+}

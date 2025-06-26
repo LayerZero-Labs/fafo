@@ -1,0 +1,120 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - main
+      - dev
+  pull_request:
+    branches:
+      - master
+      - main
+      - dev
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' && github.ref != 'refs/heads/main' }}
+
+env:
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+
+jobs:
+  format:
+    name: Format
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup-rust
+
+      - name: Check formatting
+        run: |
+          cargo fmt --all -- --check
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest-4xlarge
+    permissions:
+      contents: read
+      actions: write
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+      - uses: ./.github/actions/setup-rust
+
+      - name: Run clippy
+        run: |
+          # RUSTFLAGS="-Awarnings" silences all compiler warnings
+          RUSTFLAGS="-A warnings" cargo clippy --workspace --
+        continue-on-error: false
+
+  check:
+    name: Check
+    runs-on: ubuntu-latest-4xlarge
+    permissions:
+      contents: read
+      actions: write
+      packages: read
+    container:
+      image: ghcr.io/layerresearch/devcon:1.0.0-bookworm
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      options: --privileged
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Check
+        run: |
+          cargo check --verbose --workspace
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest-4xlarge
+    permissions:
+      contents: read
+      actions: write
+      packages: read
+    container:
+      image: ghcr.io/layerresearch/devcon:1.0.0-bookworm
+      env:
+        NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+      options: --privileged
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4
+
+      - name: Build Release
+        run: |
+          cargo build --release --verbose --workspace
+
+  basics-checks:
+    name: Basic checks
+    needs: [format, lint, check]
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Conclusion
+        run: |
+          # Print the dependent jobs to see them in the CI log
+          jq -C <<< '${{ toJson(needs) }}'
+          # Check if all jobs that we depend on (in the needs array) were successful.
+          jq --exit-status 'all(.result == "success")' <<< '${{ toJson(needs) }}'
+
+  all-checks:
+    needs: [basics-checks, build]
+    # Override the default execution condition to prevent this job from being skipped
+    # if its dependencies fail. In GitHub Actions, a skipped job is considered successful,
+    # which is not the desired behavior here. Also, ensure the job does not run when
+    # the workflow is manually canceled.
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+      # Manually check the status of all dependencies. `if: failure()` does not work.
+      - name: Conclusion
+        run: |
+          # Print the dependent jobs to see them in the CI log
+          jq -C <<< '${{ toJson(needs) }}'
+          # Check if all jobs that we depend on (in the needs array) were successful.
+          jq --exit-status 'all(.result == "success")' <<< '${{ toJson(needs) }}'
